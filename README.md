@@ -1,36 +1,45 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Sorrento amenity bookings
 
-## Getting Started
+Tenant UI for booking amenities. Accounts are created by the landlord — there is no sign-up screen.
 
-First, run the development server:
+## Setup
 
 ```bash
+cp .env.local.example .env.local
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000). CORS on the API already allows this origin.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+`.env.local` needs:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+NEXT_PUBLIC_API_URL=https://aax639heak.execute-api.ap-southeast-1.amazonaws.com
+NEXT_PUBLIC_COGNITO_REGION=ap-southeast-1
+NEXT_PUBLIC_USER_POOL_ID=ap-southeast-1_Ilv8RCHhZ
+NEXT_PUBLIC_USER_POOL_CLIENT_ID=2jpqi753v8tq2vstn9l8gk6594
+```
 
-## Learn More
+## What you can do
 
-To learn more about Next.js, take a look at the following resources:
+- Sign in with landlord-issued email and password
+- Set a new password on first login (temporary Cognito password)
+- Reset a forgotten password
+- Book an amenity
+- Review your bookings by status
+- Sign out
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Notes
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Use the **Id token** (handled by the app). Do not call MyHome from the browser.
+- Newly submitted bookings usually appear under **New**.
+- If you see “account not set up”, the landlord still needs to add your tenant record.
 
-## Deploy on Vercel
+### Live list + cancel contract
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- **`GET /bookings` rows:** `id` (ticket), optional `cancelId`, `createdDate` (Manila `YYYY-MM-DDTHH:mm`), plus amenity, times, status, notes, `guestCount`.
+- **`DELETE /bookings/{cancelId}`** — cancel uses **`cancelId`**, not the ticket `id`. On **200**, the list refetches. On **202**, refetch only (no second DELETE).
+- Cancel is shown for `New` / `In-Progress` / `Returned` when `cancelId` is present; hidden for `Approved`.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Modal **Requested By**, **Property**, and **Unit** use [`lib/tenant-constants.ts`](lib/tenant-constants.ts) plus `units[0]` from the list. Set `NEXT_PUBLIC_TENANT_DISPLAY_NAME` for **Requested By** when needed.

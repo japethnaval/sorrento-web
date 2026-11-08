@@ -5,6 +5,7 @@ const nextConfig: NextConfig = {
   experimental: {
     agentFeedback: true,
   },
+  transpilePackages: ["aws-amplify"],
   cacheComponents: true,
   partialPrefetching: true,
   turbopack: {

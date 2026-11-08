@@ -1,3 +1,5 @@
+import { PASSWORD_POLICY_HINT } from "@/lib/password-policy";
+
 export function userMessageForAuthError(error: unknown): string {
   const name =
     error && typeof error === "object" && "name" in error
@@ -24,7 +26,7 @@ export function userMessageForAuthError(error: unknown): string {
     case "ExpiredCodeException":
       return "That verification code has expired. Request a new one.";
     case "InvalidPasswordException":
-      return "Password must be at least 12 characters and include upper, lower, number, and symbol.";
+      return `Password does not meet policy. ${PASSWORD_POLICY_HINT}`;
     case "InvalidParameterException":
       return message || "Check the details and try again.";
     default:

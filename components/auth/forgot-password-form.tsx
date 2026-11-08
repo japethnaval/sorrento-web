@@ -5,10 +5,11 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { userMessageForAuthError } from "@/lib/auth-errors";
-import { passwordMeetsPolicy } from "@/lib/format";
+import { passwordMeetsPolicy, PASSWORD_POLICY_HINT } from "@/lib/format";
 import { Alert } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Field, inputClassName } from "@/components/ui/field";
+import { PasswordInput } from "@/components/ui/password-input";
 
 export function ForgotPasswordForm() {
   const router = useRouter();
@@ -87,30 +88,26 @@ export function ForgotPasswordForm() {
         <Field
           label="New password"
           htmlFor="password"
-          hint="At least 12 characters, with upper, lower, number, and symbol."
+          hint={PASSWORD_POLICY_HINT}
         >
-          <input
+          <PasswordInput
             id="password"
             name="password"
-            type="password"
             autoComplete="new-password"
             required
             value={password}
-            onChange={(event) => setPassword(event.target.value)}
-            className={inputClassName}
+            onChange={setPassword}
           />
         </Field>
 
         <Field label="Confirm password" htmlFor="confirm">
-          <input
+          <PasswordInput
             id="confirm"
             name="confirm"
-            type="password"
             autoComplete="new-password"
             required
             value={confirm}
-            onChange={(event) => setConfirm(event.target.value)}
-            className={inputClassName}
+            onChange={setConfirm}
           />
         </Field>
 

@@ -91,11 +91,4 @@ export function formatLocalRange(start: string, end: string): string {
   return `${startLabel} – ${endLabel}`;
 }
 
-export function passwordMeetsPolicy(password: string): string | null {
-  if (password.length < 12) return "Use at least 12 characters.";
-  if (!/[a-z]/.test(password)) return "Include a lowercase letter.";
-  if (!/[A-Z]/.test(password)) return "Include an uppercase letter.";
-  if (!/[0-9]/.test(password)) return "Include a number.";
-  if (!/[^A-Za-z0-9]/.test(password)) return "Include a symbol.";
-  return null;
-}
+export { passwordMeetsPolicy, PASSWORD_POLICY_HINT } from "@/lib/password-policy";

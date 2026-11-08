@@ -2,6 +2,7 @@
 
 import { Amplify } from "aws-amplify";
 import { getPublicEnv } from "@/lib/env";
+import { PASSWORD_MIN_LENGTH } from "@/lib/password-policy";
 
 let configured = false;
 
@@ -20,7 +21,7 @@ export function configureAmplify() {
             email: true,
           },
           passwordFormat: {
-            minLength: 12,
+            minLength: PASSWORD_MIN_LENGTH,
             requireLowercase: true,
             requireUppercase: true,
             requireNumbers: true,

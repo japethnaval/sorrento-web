@@ -8,6 +8,7 @@ import { userMessageForAuthError } from "@/lib/auth-errors";
 import { Alert } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Field, inputClassName } from "@/components/ui/field";
+import { PasswordInput } from "@/components/ui/password-input";
 
 export function LoginForm() {
   const router = useRouter();
@@ -57,6 +58,10 @@ export function LoginForm() {
         router.replace("/bookings");
         return;
       }
+      if (name === "PasswordResetRequiredException") {
+        router.replace("/forgot-password");
+        return;
+      }
       setError(userMessageForAuthError(caught));
     } finally {
       setPending(false);
@@ -81,15 +86,13 @@ export function LoginForm() {
       </Field>
 
       <Field label="Password" htmlFor="password">
-        <input
+        <PasswordInput
           id="password"
           name="password"
-          type="password"
           autoComplete="current-password"
           required
           value={password}
-          onChange={(event) => setPassword(event.target.value)}
-          className={inputClassName}
+          onChange={setPassword}
         />
       </Field>
 
@@ -97,11 +100,11 @@ export function LoginForm() {
         {pending ? "Signing in…" : "Sign in"}
       </Button>
 
-      {/* <p className="text-center text-sm">
+      <p className="text-center text-sm">
         <Link href="/forgot-password" className="text-accent hover:underline">
           Forgot password?
         </Link>
-      </p> */}
+      </p>
     </form>
   );
 }

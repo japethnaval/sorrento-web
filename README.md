@@ -5,21 +5,36 @@ Tenant UI for booking amenities. Accounts are created by the landlord — there 
 ## Setup
 
 ```bash
-cp .env.local.example .env.local
 npm install
+```
+
+Create a **`.env.local`** file in the project root (gitignored). Set these keys — use the values your landlord gave you; they are not stored in this repo:
+
+| Variable | Purpose |
+|----------|---------|
+| `NEXT_PUBLIC_API_URL` | Amenity bookings API base URL |
+| `NEXT_PUBLIC_COGNITO_REGION` | Cognito region (e.g. `ap-southeast-1`) |
+| `NEXT_PUBLIC_USER_POOL_ID` | Cognito user pool id |
+| `NEXT_PUBLIC_USER_POOL_CLIENT_ID` | Cognito app client id (no secret) |
+| `NEXT_PUBLIC_TENANT_DISPLAY_NAME` | Your name as shown in the booking detail modal |
+| `NEXT_PUBLIC_TENANT_PROPERTY` | Property name shown in the modal (e.g. building name) |
+
+```bash
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000). CORS on the API already allows this origin.
+Open [http://localhost:3000](http://localhost:3000). The API must allow your origin in `FrontendOrigins` (localhost is usually already allowed).
 
-`.env.local` needs:
+`npm run build` **fails** if any variable above is missing (`scripts/validate-env.mjs` loads `.env.local` when present).
 
-```bash
-NEXT_PUBLIC_API_URL=https://aax639heak.execute-api.ap-southeast-1.amazonaws.com
-NEXT_PUBLIC_COGNITO_REGION=ap-southeast-1
-NEXT_PUBLIC_USER_POOL_ID=ap-southeast-1_Ilv8RCHhZ
-NEXT_PUBLIC_USER_POOL_CLIENT_ID=2jpqi753v8tq2vstn9l8gk6594
-```
+### Production deploy
+
+1. Set the same `NEXT_PUBLIC_*` variables on the host (Vercel, Netlify, etc.) — do not commit them.
+2. Add the **production site origin** to API Gateway `FrontendOrigins`.
+3. Smoke test: sign in → list → detail → cancel (when eligible) → new booking.
+4. Security headers (CSP, `X-Frame-Options`, etc.) are in [`next.config.ts`](next.config.ts).
+
+`NEXT_PUBLIC_*` values are baked into the client bundle at build time; anyone who uses the site can see them in the browser. Keeping them out of git avoids leaking your setup in the repository and forces explicit configuration per environment.
 
 ## What you can do
 
@@ -42,4 +57,4 @@ NEXT_PUBLIC_USER_POOL_CLIENT_ID=2jpqi753v8tq2vstn9l8gk6594
 - **`DELETE /bookings/{cancelId}`** — cancel uses **`cancelId`**, not the ticket `id`. On **200**, the list refetches. On **202**, refetch only (no second DELETE).
 - Cancel is shown for `New` / `In-Progress` / `Returned` when `cancelId` is present; hidden for `Approved`.
 
-Modal **Requested By**, **Property**, and **Unit** use [`lib/tenant-constants.ts`](lib/tenant-constants.ts) plus `units[0]` from the list. Set `NEXT_PUBLIC_TENANT_DISPLAY_NAME` for **Requested By** when needed.
+Modal **Requested By** and **Property** come from `NEXT_PUBLIC_TENANT_DISPLAY_NAME` and `NEXT_PUBLIC_TENANT_PROPERTY`. **Unit** uses `units[0]` from the list API.

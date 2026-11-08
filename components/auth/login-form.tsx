@@ -27,7 +27,10 @@ export function LoginForm() {
         password,
       });
 
-      if (result.nextStep.signInStep === "CONFIRM_SIGN_IN_WITH_NEW_PASSWORD_REQUIRED") {
+      if (
+        result.nextStep.signInStep ===
+        "CONFIRM_SIGN_IN_WITH_NEW_PASSWORD_REQUIRED"
+      ) {
         router.replace("/login/new-password");
         return;
       }
@@ -42,7 +45,9 @@ export function LoginForm() {
         return;
       }
 
-      setError("This sign-in step is not supported. Please contact the landlord.");
+      setError(
+        "This sign-in step is not supported. Please contact the landlord.",
+      );
     } catch (caught) {
       const name =
         caught && typeof caught === "object" && "name" in caught
@@ -92,11 +97,11 @@ export function LoginForm() {
         {pending ? "Signing in…" : "Sign in"}
       </Button>
 
-      <p className="text-center text-sm">
+      {/* <p className="text-center text-sm">
         <Link href="/forgot-password" className="text-accent hover:underline">
           Forgot password?
         </Link>
-      </p>
+      </p> */}
     </form>
   );
 }

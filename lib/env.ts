@@ -1,19 +1,56 @@
-const defaults = {
-  apiUrl: "https://aax639heak.execute-api.ap-southeast-1.amazonaws.com",
-  cognitoRegion: "ap-southeast-1",
-  userPoolId: "ap-southeast-1_Ilv8RCHhZ",
-  userPoolClientId: "2jpqi753v8tq2vstn9l8gk6594",
-};
+import { SETUP_HINT } from "@/lib/validate-public-env";
+
+/** Next inlines only literal `process.env.NEXT_PUBLIC_*` — not dynamic `process.env[name]`. */
+function requirePublic(value: string | undefined, name: string): string {
+  const trimmed = value?.trim();
+  if (trimmed) return trimmed;
+  throw new Error(`Missing ${name}. ${SETUP_HINT}`);
+}
 
 export function getPublicEnv() {
+  const apiUrl = requirePublic(
+    process.env.NEXT_PUBLIC_API_URL,
+    "NEXT_PUBLIC_API_URL",
+  ).replace(/\/$/, "");
   return {
-    apiUrl: (process.env.NEXT_PUBLIC_API_URL ?? defaults.apiUrl).replace(
-      /\/$/,
-      "",
+    apiUrl,
+    cognitoRegion: requirePublic(
+      process.env.NEXT_PUBLIC_COGNITO_REGION,
+      "NEXT_PUBLIC_COGNITO_REGION",
     ),
-    cognitoRegion: process.env.NEXT_PUBLIC_COGNITO_REGION ?? defaults.cognitoRegion,
-    userPoolId: process.env.NEXT_PUBLIC_USER_POOL_ID ?? defaults.userPoolId,
-    userPoolClientId:
-      process.env.NEXT_PUBLIC_USER_POOL_CLIENT_ID ?? defaults.userPoolClientId,
+    userPoolId: requirePublic(
+      process.env.NEXT_PUBLIC_USER_POOL_ID,
+      "NEXT_PUBLIC_USER_POOL_ID",
+    ),
+    userPoolClientId: requirePublic(
+      process.env.NEXT_PUBLIC_USER_POOL_CLIENT_ID,
+      "NEXT_PUBLIC_USER_POOL_CLIENT_ID",
+    ),
+    tenantDisplayName: requirePublic(
+      process.env.NEXT_PUBLIC_TENANT_DISPLAY_NAME,
+      "NEXT_PUBLIC_TENANT_DISPLAY_NAME",
+    ),
+    tenantProperty: requirePublic(
+      process.env.NEXT_PUBLIC_TENANT_PROPERTY,
+      "NEXT_PUBLIC_TENANT_PROPERTY",
+    ),
   };
+}
+
+export function getMissingPublicEnv(): string[] {
+  const entries: [string, string | undefined][] = [
+    ["NEXT_PUBLIC_API_URL", process.env.NEXT_PUBLIC_API_URL],
+    ["NEXT_PUBLIC_COGNITO_REGION", process.env.NEXT_PUBLIC_COGNITO_REGION],
+    ["NEXT_PUBLIC_USER_POOL_ID", process.env.NEXT_PUBLIC_USER_POOL_ID],
+    [
+      "NEXT_PUBLIC_USER_POOL_CLIENT_ID",
+      process.env.NEXT_PUBLIC_USER_POOL_CLIENT_ID,
+    ],
+    [
+      "NEXT_PUBLIC_TENANT_DISPLAY_NAME",
+      process.env.NEXT_PUBLIC_TENANT_DISPLAY_NAME,
+    ],
+    ["NEXT_PUBLIC_TENANT_PROPERTY", process.env.NEXT_PUBLIC_TENANT_PROPERTY],
+  ];
+  return entries.filter(([, v]) => !v?.trim()).map(([k]) => k);
 }

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { AuthProvider } from "@/app/providers";
+import { EnvPublicConfigGate } from "@/components/env-public-config-gate";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -26,7 +27,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       style={{ colorScheme: "light" }}
     >
       <body className="min-h-full flex flex-col bg-background text-foreground">
-        <AuthProvider>{children}</AuthProvider>
+        <EnvPublicConfigGate>
+          <AuthProvider>{children}</AuthProvider>
+        </EnvPublicConfigGate>
       </body>
     </html>
   );

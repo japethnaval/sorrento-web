@@ -3,8 +3,7 @@
 import { fetchAuthSession, signOut } from "aws-amplify/auth";
 import { Hub } from "aws-amplify/utils";
 import { configureAmplify } from "@/lib/amplify";
-
-configureAmplify();
+import { getMissingPublicEnv } from "@/lib/env";
 
 export type AuthStatus = "loading" | "authenticated" | "unauthenticated";
 
@@ -34,6 +33,9 @@ async function readSession() {
 function ensureStarted() {
   if (started) return;
   started = true;
+  if (getMissingPublicEnv().length === 0) {
+    configureAmplify();
+  }
   void readSession();
   Hub.listen("auth", ({ payload }) => {
     if (payload.event === "signedIn") {

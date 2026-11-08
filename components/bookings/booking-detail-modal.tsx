@@ -11,8 +11,8 @@ import { canCancelBooking } from "@/lib/booking-cancel";
 import { statusBadgeClass } from "@/lib/booking-status-style";
 import { formatCreatedDate, formatMyHomeDateTime } from "@/lib/format";
 import {
-  TENANT_PROPERTY,
-  TENANT_REQUESTED_BY,
+  getTenantProperty,
+  getTenantRequestedBy,
 } from "@/lib/tenant-constants";
 
 function Row({
@@ -188,8 +188,8 @@ export function BookingDetailModal({
                 </Row>
               ) : null}
               <Row label="Date Created:">{dateCreated ?? "—"}</Row>
-              <Row label="Requested By:">{TENANT_REQUESTED_BY}</Row>
-              <Row label="Property:">{TENANT_PROPERTY}</Row>
+              <Row label="Requested By:">{getTenantRequestedBy()}</Row>
+              <Row label="Property:">{getTenantProperty()}</Row>
               <Row label="Unit:">{unitId}</Row>
             </dl>
           </section>

@@ -217,10 +217,24 @@ function BookingResults({
                     </div>
                   ) : null}
                 </dl>
-                {request.notes ? (
-                  <p className="mt-2 line-clamp-3 text-sm whitespace-pre-line text-muted">
-                    {request.notes}
+                {request.notes?.trim() ? (
+                  <p className="mt-2 line-clamp-2 text-sm whitespace-pre-wrap text-muted">
+                    <span className="font-medium text-foreground">Notes: </span>
+                    {request.notes.trim()}
                   </p>
+                ) : null}
+                {request.remarks?.trim() ? (
+                  <div className="mt-2 rounded-md border border-[#1a5a8a]/25 bg-[#e8f0f8] px-3 py-2 text-left">
+                    <p className="text-xs font-semibold text-[#1a5a8a]">
+                      Remarks
+                    </p>
+                    <p className="mt-1 line-clamp-4 text-sm leading-relaxed whitespace-pre-wrap text-[#374151]">
+                      {request.remarks.trim()}
+                    </p>
+                    <p className="mt-1 text-xs text-muted">
+                      Open for full text — show this to the guard when approved.
+                    </p>
+                  </div>
                 ) : null}
               </button>
             </li>

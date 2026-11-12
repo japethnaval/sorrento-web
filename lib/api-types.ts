@@ -40,7 +40,10 @@ export interface BookingRequest {
   amenity: string;
   start: string;
   end: string;
-  notes: string;
+  /** Tenant notes (registered name, etc.) — not admin approval text. */
+  notes?: string;
+  /** Admin approval Remarks from MyHome — show to tenant when present. */
+  remarks?: string;
   guestCount: number;
   /** Philippines local `YYYY-MM-DDTHH:mm` when the ticket was created. */
   createdDate?: string;

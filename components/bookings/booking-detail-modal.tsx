@@ -53,6 +53,8 @@ export function BookingDetailModal({
   const [cancelPending, setCancelPending] = useState(false);
   const [confirmCancelOpen, setConfirmCancelOpen] = useState(false);
   const dateCreated = formatCreatedDate(request.createdDate);
+  const adminRemarks = request.remarks?.trim() || null;
+  const tenantNotes = request.notes?.trim() || null;
   const showCancel = canCancelBooking(request);
 
   useEffect(() => {
@@ -208,12 +210,23 @@ export function BookingDetailModal({
               <Row label="No of Guest if applicable">{request.guestCount}</Row>
               <Row label="List of Amenities">{request.amenity || "—"}</Row>
               <Row label="Notes">
-                <span className="whitespace-pre-line">
-                  {request.notes?.replace(/\n/g, " ") || "—"}
+                <span className="whitespace-pre-wrap text-left">
+                  {tenantNotes ?? "—"}
                 </span>
               </Row>
             </dl>
           </section>
+
+          {adminRemarks ? (
+            <section className="mt-2 border-t-4 border-[#1a5a8a] bg-white px-5 py-4">
+              <h3 className="text-[16px] font-semibold text-[#1a5a8a]">
+                Remarks
+              </h3>
+              <p className="mt-2 text-left text-[14px] leading-6 whitespace-pre-wrap text-[#374151]">
+                {adminRemarks}
+              </p>
+            </section>
+          ) : null}
         </div>
 
         {confirmCancelOpen ? (
